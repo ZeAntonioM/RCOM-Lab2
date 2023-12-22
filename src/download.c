@@ -25,7 +25,7 @@ int parse_url(char * url, char * username, char * password, char * host, char * 
         sscanf(url, HOST_AT_REGEX, host);
     else 
         sscanf(url, HOST_REGEX, host);
-    sscanf(url, RESOURCE_REGEX, path);
+    sscanf(url, PATH_REGEX, path);
 
    
     return 0;
@@ -94,8 +94,9 @@ int login(int socket, char * username, char * password ){
         printf("Error while sending user command: %s\n", strerror(errno));
         return -1;
     }
-
+    sleep(1);
     response_code = read_response_code(socket);
+    printf("%d\n", response_code);
     if (response_code == LOGIN_SUCCESSFULL_CODE) {
         printf("Login successful \n");
         return 0;
@@ -105,7 +106,7 @@ int login(int socket, char * username, char * password ){
     }
     
     if(password[0]=='\0')
-        snprintf(request, BUFFER_SIZE, "PASS %s\n%n", DEAFAULT_PASSWORD, &resquest_len);
+        snprintf(request, BUFFER_SIZE, "PASS  \n%n", &resquest_len);
     else 
         snprintf(request, BUFFER_SIZE, "PASS %s\n%n", password, &resquest_len);
 
@@ -222,7 +223,7 @@ int read_response (int socket, char * response, int response_len){
 
     response[total_bytes_read] = '\0';
     if(total_bytes_read>0) printf("Server Response: %s\n", response);
-
+    else printf("Empty response\n");
     return 0;
 }
 
